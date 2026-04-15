@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Análise Estatística da Bateria (Terminal de Pagamento Gertec MP35P)</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <style>
+    body { font-family: 'Roboto', Arial, sans-serif; margin: 20px; }
+    #downloadBtn, #toggleLabelsBtn {
+      margin-top: 15px; margin-right: 10px; padding: 8px 16px;
+      background-color: #A3C4F3; border: none; border-radius: 4px;
+      cursor: pointer; font-weight: bold;
+    }
+    #downloadBtn:hover, #toggleLabelsBtn:hover { background-color: #A8D5BA; }
+    .analise { margin-top: 25px; padding: 15px; background: #f9f9f9; border-left: 4px solid #A3C4F3; }
+    .analise h3 { margin-bottom: 5px; color: #333; }
+    table { border-collapse: collapse; margin: 15px 0; width: 100%; }
+    table, th, td { border: 1px solid #ccc; }
+    th, td { padding: 8px; text-align: left; }
+    th { background: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <h2>Análise Estatística da Bateria (Terminal de Pagamento Gertec MP35P)</h2>
+  <canvas id="bateriaChart" width="900" height="500"></canvas>
+  <br>
+  <button id="toggleLabelsBtn">Alternar Valores Fixos</button>
+  <button id="downloadBtn">Baixar Gráfico (PNG 300 DPI)</button>
+
+  <div class="analise">
+    <h3>1. Explicação dos dados</h3>
+    <p>O gráfico apresenta a distribuição absoluta das respostas na escala Likert (1 = Muito Negativo até 5 = Muito Positivo) para duas dimensões críticas da bateria do terminal de pagamento <strong>Gertec MP35P</strong>: satisfação com autonomia e dependência da tomada.</p>
+
+    <h3>2. Estrutura das perguntas aplicadas</h3>
+    <!-- Tabela 1: Critérios e Escala Likert -->
+    <table>
+      <caption>Descrição dos critérios avaliados e respectivas escalas Likert</caption>
+      <tr><th>Coluna (Critério)</th><th>Escala Likert aplicada</th></tr>
+      <tr><td>Satisfação com autonomia da bateria</td><td>2 = Insatisfeito, 3 = Neutro, 4 = Satisfeito</td></tr>
+      <tr><td>Dependência da tomada</td><td>2 = Raramente, 3 = Às vezes, 4 = Frequentemente</td></tr>
+    </table>
+
+    <h3>3. O que os dados revelam</h3>
+    <p>Os resultados indicam que a maioria dos usuários está satisfeita com a autonomia da bateria, com 21 respostas nos níveis 4 e 5. Já a dependência da tomada apresenta maior dispersão, com 10 respostas no nível 1 (baixa dependência) e 8 no nível 3 (dependência moderada), sugerindo que parte dos usuários ainda enfrenta limitações operacionais.</p>
+
+    <h3>4. Diagnóstico Técnico de Atributos</h3>
+    <p>Consolidando os resultados, o terminal Gertec MP35P demonstra boa aceitação em termos de autonomia da bateria, reforçando sua confiabilidade para uso contínuo. Entretanto, a dependência da tomada, embora não crítica, evidencia que em determinados cenários a recarga ainda é um fator limitante. Estatisticamente, a predominância de avaliações positivas reforça a adequação do equipamento, mas aponta para oportunidades de melhoria na eficiência energética.</p>
+  </div>
+
+  <script>
+    const ctx = document.getElementById("bateriaChart").getContext("2d");
+
+    const data = {
+      labels: [
+        "Satisfação com autonomia da bateria",
+        "Dependência da tomada"
+      ],
+      datasets: [
+        {
+          label: "1 (Muito Negativo)",
+          data: [1, 10],
+          backgroundColor: "#FF6B6B"
+        },
+        {
+          label: "2 (Negativo)",
+          data: [2, 6],
+          backgroundColor: "#FFD6A5"
+        },
+        {
+          label: "3 (Neutro)",
+          data: [3, 8],
+          backgroundColor: "#CDB4DB"
+        },
+        {
+          label: "4 (Positivo)",
+          data: [9, 3],
+          backgroundColor: "#A8D5BA"
+        },
+        {
+          label: "5 (Muito Positivo)",
+          data: [12, 0],
+          backgroundColor: "#A3C4F3"
+        }
+      ]
+    };
+
+    let showLabels = true;
+
+    const config = {
+      type: "bar",
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: "top" },
+          title: {
+            display: true,
+            text: "Distribuição das Respostas - Bateria (Gertec MP35P)"
+          },
+          datalabels: {
+            display: function() { return showLabels; },
+            color: "#000",
+            anchor: "center",
+            align: "center",
+            font: { weight: "bold" },
+            formatter: function(value) { return value; }
+          }
+        },
+        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+      },
+      plugins: [ChartDataLabels]
+    };
+
+    const bateriaChart = new Chart(ctx, config);
+
+    document.getElementById("toggleLabelsBtn").addEventListener("click", function() {
+      showLabels = !showLabels;
+      bateriaChart.update();
+    });
+
+    document.getElementById("downloadBtn").addEventListener("click", function() {
+      const link = document.createElement("a");
+      link.download = "Bateria_MP35P.png";
+      link.href = bateriaChart.toBase64Image("image/png", 1.0);
+      link.click();
+    });
+  </script>
+</body>
+</html>
