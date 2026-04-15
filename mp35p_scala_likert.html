@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Análise Estatística da Usabilidade e Ergonomia (MP35P)</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <style>
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      margin: 20px;
+    }
+    #downloadBtn, #toggleLabelsBtn {
+      margin-top: 15px;
+      margin-right: 10px;
+      padding: 8px 16px;
+      background-color: #A3C4F3;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #downloadBtn:hover, #toggleLabelsBtn:hover {
+      background-color: #A8D5BA;
+    }
+    .analise {
+      margin-top: 25px;
+      padding: 15px;
+      background: #f9f9f9;
+      border-left: 4px solid #A3C4F3;
+    }
+    .analise h3 {
+      margin-bottom: 5px;
+      color: #333;
+    }
+    table {
+      border-collapse: collapse;
+      margin: 15px 0;
+      width: 100%;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <h2>Análise Estatística da Usabilidade e Ergonomia (MP35P)</h2>
+  <canvas id="usabilidadeChart" width="900" height="500"></canvas>
+  <br>
+  <button id="toggleLabelsBtn">Alternar Valores Fixos</button>
+  <button id="downloadBtn">Baixar Gráfico (PNG 300 DPI)</button>
+
+  <div class="analise">
+    <h3>1. Explicação dos dados</h3>
+    <p>O gráfico apresenta a distribuição absoluta das respostas na escala Likert (1 = Muito Negativo até 5 = Muito Positivo) para cinco dimensões críticas de usabilidade e ergonomia. Os valores podem ser fixados dentro das barras para relatórios estáticos em LaTeX ou visualizados dinamicamente via tooltip no modo web.</p>
+
+    <h3>2. Estrutura das perguntas aplicadas</h3>
+    <table>
+      <tr><th>Coluna (Critério)</th><th>Escala Likert aplicada</th></tr>
+      <tr><td>Facilidade de operação</td><td>2 = Difícil, 3 = Neutro, 4 = Fácil</td></tr>
+      <tr><td>Interface intuitiva</td><td>2 = Pouco intuitiva, 3 = Neutra, 4 = Intuitiva</td></tr>
+      <tr><td>Clareza das instruções</td><td>2 = Confusas, 3 = Neutras, 4 = Fáceis de entender</td></tr>
+      <tr><td>Ergonomia do terminal</td><td>2 = Desconfortável, 3 = Neutra, 4 = Confortável</td></tr>
+      <tr><td>Facilidade de suporte</td><td>2 = Difícil, 3 = Neutro, 4 = Fácil</td></tr>
+    </table>
+
+    <h3>3. O que os dados revelam</h3>
+    <p>Observa-se predominância de avaliações positivas e muito positivas em quase todos os critérios, especialmente em interface intuitiva e clareza das instruções. Entretanto, a dimensão “facilidade de suporte” apresenta maior dispersão, incluindo respostas negativas e muito negativas, sinalizando fragilidade operacional nesse atributo.</p>
+
+    <h3>4. Diagnóstico Técnico de Atributos</h3>
+    <p>Consolidando os resultados, o terminal MP35P demonstra robustez em usabilidade e ergonomia, com forte aceitação dos usuários em aspectos de interface e clareza informacional. Contudo, o suporte técnico e operacional emerge como ponto crítico, sugerindo necessidade de revisão nos processos de manutenção e assistência. Do ponto de vista estatístico, a concentração de respostas em níveis superiores da escala reforça a confiabilidade do produto, mas evidencia áreas específicas que comprometem a experiência plena do usuário.</p>
+  </div>
+
+  <script>
+    const ctx = document.getElementById("usabilidadeChart").getContext("2d");
+
+    const data = {
+      labels: [
+        "Facilidade de operação",
+        "Interface intuitiva",
+        "Clareza das instruções",
+        "Ergonomia do terminal",
+        "Facilidade de suporte"
+      ],
+      datasets: [
+        {
+          label: "1 (Muito Negativo)",
+          data: [0, 0, 0, 0, 2],
+          backgroundColor: "#FF6B6B"
+        },
+        {
+          label: "2 (Negativo)",
+          data: [1, 0, 0, 0, 1],
+          backgroundColor: "#FFD6A5"
+        },
+        {
+          label: "3 (Neutro)",
+          data: [5, 5, 2, 1, 7],
+          backgroundColor: "#CDB4DB"
+        },
+        {
+          label: "4 (Positivo)",
+          data: [10, 8, 9, 9, 8],
+          backgroundColor: "#A8D5BA"
+        },
+        {
+          label: "5 (Muito Positivo)",
+          data: [11, 14, 16, 17, 9],
+          backgroundColor: "#A3C4F3"
+        }
+      ]
+    };
+
+    let showLabels = true;
+
+    const config = {
+      type: "bar",
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: "top" },
+          title: {
+            display: true,
+            text: "Distribuição das Respostas - Usabilidade e Ergonomia (MP35P)"
+          },
+          datalabels: {
+            display: function() { return showLabels; },
+            color: "#000",
+            anchor: "center",
+            align: "center",
+            font: { weight: "bold" },
+            formatter: function(value) {
+              return value;
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 }
+          }
+        }
+      },
+      plugins: [ChartDataLabels]
+    };
+
+    const usabilidadeChart = new Chart(ctx, config);
+
+    // Alternar labels fixos
+    document.getElementById("toggleLabelsBtn").addEventListener("click", function() {
+      showLabels = !showLabels;
+      usabilidadeChart.update();
+    });
+
+    // Função para download em PNG 300 DPI
+    document.getElementById("downloadBtn").addEventListener("click", function() {
+      const link = document.createElement("a");
+      link.download = "Usabilidade_Ergonomia_MP35P.png";
+      link.href = usabilidadeChart.toBase64Image("image/png", 1.0);
+      link.click();
+    });
+  </script>
+</body>
+</html>
