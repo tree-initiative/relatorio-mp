@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatório Interativo - MP35P</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      margin: 0;
+      display: flex;
+    }
+    nav {
+      width: 220px;
+      background-color: #A3C4F3;
+      padding: 20px;
+      height: 100vh;
+    }
+    nav h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    nav a {
+      display: block;
+      margin: 10px 0;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    main {
+      flex: 1;
+      padding: 20px;
+    }
+    section {
+      margin-bottom: 50px;
+    }
+    canvas {
+      max-width: 800px;
+      margin-top: 20px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background-color: #A8D5BA;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #FFD6A5;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h2>Menu</h2>
+    <a href="#usabilidade">Usabilidade</a>
+    <a href="#conectividade">Conectividade</a>
+    <a href="#bateria">Bateria</a>
+    <a href="#comercial">Comercial</a>
+    <a href="#correlacoes">Correlação</a>
+    <a href="#clusters">Clusters</a>
+    <a href="#conclusoes">Conclusões</a>
+  </nav>
+
+  <main>
+    <section id="usabilidade">
+      <h2>Distribuição Likert - Usabilidade</h2>
+      <canvas id="chartUsabilidade"></canvas>
+      <button onclick="downloadChart(chartUsabilidade, 'usabilidade.png')">Baixar PNG 300 DPI</button>
+    </section>
+
+    <!-- Outras seções vão aqui -->
+  </main>
+
+  <script>
+    // Exemplo de gráfico Usabilidade
+    const ctx = document.getElementById('chartUsabilidade').getContext('2d');
+    const chartUsabilidade = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ["Usabilidade"],
+        datasets: [
+          { label: "2 (Negativo)", data: [5], backgroundColor: "#FFD6A5" },
+          { label: "3 (Neutro)", data: [15], backgroundColor: "#CDB4DB" },
+          { label: "4 (Positivo)", data: [80], backgroundColor: "#A8D5BA" }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: "top" },
+          title: { display: true, text: "Distribuição Likert - Usabilidade" }
+        },
+        scales: {
+          x: { stacked: true },
+          y: { stacked: true, max: 100, ticks: { callback: v => v + "%" } }
+        }
+      }
+    });
+
+    // Função para download em PNG
+    function downloadChart(chart, filename) {
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = chart.toBase64Image("image/png", 1.0);
+      link.click();
+    }
+  </script>
+</body>
+</html>
