@@ -33,12 +33,27 @@
     <p>O gráfico apresenta a distribuição absoluta das respostas na escala Likert (1 = Muito Negativo até 5 = Muito Positivo) para três dimensões críticas de conectividade do terminal de pagamento <strong>Gertec MP35P</strong>: estabilidade da conexão, frequência de erros e velocidade percebida no fluxo de clientes.</p>
 
     <h3>2. Estrutura das perguntas aplicadas</h3>
+    
+
+        <!-- Tabela 1: Critérios e Escala Likert -->
     <table>
+      <caption>Descrição dos critérios avaliados e respectivas escalas Likert</caption>
+      <tr><th>Coluna (Critério)</th><th>Escala Likert aplicada</th></tr>
+      <tr><td>Estabilidade da conexão</td><td>2 = Instável, 3 = Neutra, 4 = Estável</td></tr>
+      <tr><td>Frequência de erros de conexão</td><td>2 = Raramente, 3 = Às vezes, 4 = Frequentemente</td></tr>
+      <tr><td>Velocidade da conexão</td><td>2 = Lenta, 3 = Neutra, 4 = Rápida</td></tr>
+    </table>
+
+    <!-- Tabela 2: Tipos de conexão principal -->
+    <table>
+      <caption>Distribuição dos tipos de conexão principal utilizados</caption>
       <tr><th>Tipo de conexão principal</th><th>Quantidade de respostas</th></tr>
       <tr><td>Chip M2M (GPRS/3G/4G/5G)</td><td>24</td></tr>
       <tr><td>WI-FI (rede sem fio)</td><td>3</td></tr>
     </table>
 
+
+    
     <h3>3. O que os dados revelam</h3>
     <p>Os resultados indicam que a conectividade via Chip M2M apresenta maior estabilidade e velocidade, enquanto o Wi-Fi mostra maior variabilidade, com incidência de avaliações neutras e algumas negativas. A frequência de erros é percebida como baixa na maioria dos casos, mas há registros de instabilidade em ambientes com Wi-Fi.</p>
 
@@ -57,14 +72,29 @@
       ],
       datasets: [
         {
-          label: "Chip M2M (GPRS/3G/4G/5G)",
-          data: [/* totais apurados */],
-          backgroundColor: "#A3C4F3"
+          label: "1 (Muito Negativo)",
+          data: [0, 0, 0, 0, 0],
+          backgroundColor: "#FF6B6B"
         },
         {
-          label: "WI-FI (rede sem fio)",
-          data: [/* totais apurados */],
+          label: "2 (Negativo)",
+          data: [1, 6, 2, 0, 0],
           backgroundColor: "#FFD6A5"
+        },
+        {
+          label: "3 (Neutro)",
+          data: [6, 7, 4, 0, 0],
+          backgroundColor: "#CDB4DB"
+        },
+        {
+          label: "4 (Positivo)",
+          data: [7, 4, 12, 0, 0],
+          backgroundColor: "#A8D5BA"
+        },
+        {
+          label: "5 (Muito Positivo)",
+          data: [13, 0, 9, 0, 0],
+          backgroundColor: "#A3C4F3"
         }
       ]
     };
