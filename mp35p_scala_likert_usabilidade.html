@@ -79,95 +79,129 @@
     <p>Consolidando os resultados, o terminal MP35P demonstra robustez em usabilidade e ergonomia, com forte aceitação dos usuários em aspectos de interface e clareza informacional. Contudo, o suporte técnico e operacional emerge como ponto crítico, sugerindo necessidade de revisão nos processos de manutenção e assistência. Do ponto de vista estatístico, a concentração de respostas em níveis superiores da escala reforça a confiabilidade do produto, mas evidencia áreas específicas que comprometem a experiência plena do usuário.</p>
   </div>
 
+  
   <script>
-    const ctx = document.getElementById("usabilidadeChart").getContext("2d");
+  const ctx = document.getElementById("usabilidadeChart").getContext("2d");
 
-    const data = {
-      labels: [
-        "Facilidade de operação",
-        "Interface intuitiva",
-        "Clareza das instruções",
-        "Ergonomia do terminal",
-        "Facilidade de suporte"
-      ],
-      datasets: [
-        {
-          label: "1 (Muito Negativo)",
-          data: [0, 0, 0, 0, 2],
-          backgroundColor: "#FF6B6B"
-        },
-        {
-          label: "2 (Negativo)",
-          data: [1, 0, 0, 0, 1],
-          backgroundColor: "#FFD6A5"
-        },
-        {
-          label: "3 (Neutro)",
-          data: [5, 5, 2, 1, 7],
-          backgroundColor: "#CDB4DB"
-        },
-        {
-          label: "4 (Positivo)",
-          data: [10, 8, 9, 9, 8],
-          backgroundColor: "#A8D5BA"
-        },
-        {
-          label: "5 (Muito Positivo)",
-          data: [11, 14, 16, 17, 9],
-          backgroundColor: "#A3C4F3"
-        }
-      ]
-    };
+  const data = {
+    labels: [
+      "Facilidade de operação",
+      "Interface intuitiva",
+      "Clareza das instruções",
+      "Ergonomia do terminal",
+      "Facilidade de suporte"
+    ],
+    datasets: [
+      {
+        label: "1 (Muito Negativo)",
+        data: [0, 0, 0, 0, 2],
+        backgroundColor: "#FF6B6B"
+      },
+      {
+        label: "2 (Negativo)",
+        data: [1, 0, 0, 0, 1],
+        backgroundColor: "#FFD6A5"
+      },
+      {
+        label: "3 (Neutro)",
+        data: [5, 5, 2, 1, 7],
+        backgroundColor: "#CDB4DB"
+      },
+      {
+        label: "4 (Positivo)",
+        data: [10, 9, 10, 10, 9],
+        backgroundColor: "#A8D5BA"
+      },
+      {
+        label: "5 (Muito Positivo)",
+        data: [13, 15, 17, 18, 10],
+        backgroundColor: "#A3C4F3"
+      }
+    ]
+  };
 
-    let showLabels = true;
+  // Função para calcular totais por pergunta
+  function calcularTotaisPorPergunta(datasets) {
+    const numPerguntas = datasets[0].data.length;
+    const totais = Array(numPerguntas).fill(0);
 
-    const config = {
-      type: "bar",
-      data: data,
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: "top" },
-          title: {
-            display: true,
-            text: "Distribuição das Respostas - Usabilidade e Ergonomia (Gertec MP35P)"
-          },
-          datalabels: {
-            display: function() { return showLabels; },
-            color: "#000",
-            anchor: "center",
-            align: "center",
-            font: { weight: "bold" },
-            formatter: function(value) {
-              return value;
-            }
-          }
+    datasets.forEach(ds => {
+      ds.data.forEach((valor, i) => {
+        totais[i] += valor;
+      });
+    });
+
+    return totais;
+  }
+
+  const totais = calcularTotaisPorPergunta(data.datasets);
+  const todosIguais = totais.every(t => t === totais[0]);
+  let subtitulo = "";
+
+  if (todosIguais) {
+    subtitulo = `Total de respostas: ${totais[0]}`;
+  } else {
+    subtitulo = `Inconsistência detectada: totais diferentes (${totais.join(", ")})`;
+  }
+
+  let showLabels = true;
+
+  const config = {
+    type: "bar",
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "top" },
+        title: {
+          display: true,
+          text: "Distribuição das Respostas - Usabilidade e Ergonomia (Gertec MP35P)"
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: { stepSize: 1 }
+        subtitle: {
+          display: true,
+          text: subtitulo,
+          color: "#333",
+          font: { size: 14, style: "italic" }
+        },
+        datalabels: {
+          display: function() { return showLabels; },
+          color: "#000",
+          anchor: "center",
+          align: "center",
+          font: { weight: "bold" },
+          formatter: function(value) {
+            return value;
           }
         }
       },
-      plugins: [ChartDataLabels]
-    };
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1 }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  };
 
-    const usabilidadeChart = new Chart(ctx, config);
+  const usabilidadeChart = new Chart(ctx, config);
 
-    // Alternar labels fixos
-    document.getElementById("toggleLabelsBtn").addEventListener("click", function() {
-      showLabels = !showLabels;
-      usabilidadeChart.update();
-    });
+  // Alternar labels fixos
+  document.getElementById("toggleLabelsBtn").addEventListener("click", function() {
+    showLabels = !showLabels;
+    usabilidadeChart.update();
+  });
 
-    // Função para download em PNG 300 DPI
-    document.getElementById("downloadBtn").addEventListener("click", function() {
-      const link = document.createElement("a");
-      link.download = "Usabilidade_Ergonomia_MP35P.png";
-      link.href = usabilidadeChart.toBase64Image("image/png", 1.0);
-      link.click();
-    });
-  </script>
+  // Função para download em PNG 300 DPI
+  document.getElementById("downloadBtn").addEventListener("click", function() {
+    const link = document.createElement("a");
+    link.download = "Usabilidade_Ergonomia_MP35P.png";
+    link.href = usabilidadeChart.toBase64Image("image/png", 1.0);
+    link.click();
+  });
+</script>
+
+  
+
 </body>
 </html>
