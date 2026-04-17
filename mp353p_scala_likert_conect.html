@@ -61,115 +61,194 @@
     <p>Consolidando os resultados, o terminal Gertec MP35P demonstra desempenho robusto em conectividade quando operando com Chip M2M, garantindo estabilidade e velocidade adequadas ao fluxo de clientes. O Wi-Fi, embora funcional, apresenta maior dispersão nas avaliações, sugerindo necessidade de otimização em ambientes com alta densidade de dispositivos. Estatisticamente, a predominância de respostas positivas reforça a confiabilidade do equipamento, mas evidencia que a escolha da tecnologia de conexão impacta diretamente a experiência do usuário.</p>
   </div>
 
+ <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gráfico Conectividade</title>
+  <style>
+    /* Fonte global para toda a página */
+    body {
+      font-size: 18px;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    h2 {
+      font-size: 24px;
+    }
+
+    h3 {
+      font-size: 20px;
+    }
+
+    button {
+      font-size: 16px;
+    }
+
+    .small-text {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="conectividadeChart"></canvas>
+  <button id="toggleLabelsBtn">Mostrar/Ocultar Labels</button>
+  <button id="downloadBtn">Baixar Gráfico</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
   <script>
-  const ctx = document.getElementById("conectividadeChart").getContext("2d");
+    const ctx = document.getElementById("conectividadeChart").getContext("2d");
 
-  const data = {
-    labels: [
-      "Estabilidade da conexão",
-      "Frequência de erros",
-      "Velocidade da conexão"
-    ],
-    datasets: [
-      {
-        label: "1 (Muito Negativo)",
-        data: [0, 0, 0],
-        backgroundColor: "#FF6B6B"
-      },
-      {
-        label: "2 (Negativo)",
-        data: [1, 4, 2],
-        backgroundColor: "#FFD6A5"
-      },
-      {
-        label: "3 (Neutro)",
-        data: [6, 7, 4],
-        backgroundColor: "#CDB4DB"
-      },
-      {
-        label: "4 (Positivo)",
-        data: [7, 7, 12],
-        backgroundColor: "#A8D5BA"
-      },
-      {
-        label: "5 (Muito Positivo)",
-        data: [15, 11, 11],
-        backgroundColor: "#A3C4F3"
-      }
-    ]
-  };
+    const data = {
+      labels: [
+        "Estabilidade da conexão",
+        "Frequência de erros",
+        "Velocidade da conexão"
+      ],
+      datasets: [
+        {
+          label: "1 (Muito Negativo)",
+          data: [ , , ],
+          backgroundColor: "#FF6B6B"
+        },
+        {
+          label: "2 (Negativo)",
+          data: [1, 4, 2],
+          backgroundColor: "#FFD6A5"
+        },
+        {
+          label: "3 (Neutro)",
+          data: [6, 7, 4],
+          backgroundColor: "#CDB4DB"
+        },
+        {
+          label: "4 (Positivo)",
+          data: [7, 7, 12],
+          backgroundColor: "#A8D5BA"
+        },
+        {
+          label: "5 (Muito Positivo)",
+          data: [15, 11, 11],
+          backgroundColor: "#A3C4F3"
+        }
+      ]
+    };
 
-  // Função para calcular totais por pergunta
-  function calcularTotaisPorPergunta(datasets) {
-    const numPerguntas = datasets[0].data.length;
-    const totais = Array(numPerguntas).fill(0);
+    // Função para calcular totais por pergunta
+    function calcularTotaisPorPergunta(datasets) {
+      const numPerguntas = datasets[0].data.length;
+      const totais = Array(numPerguntas).fill(0);
 
-    datasets.forEach(ds => {
-      ds.data.forEach((valor, i) => {
-        totais[i] += valor;
+      datasets.forEach(ds => {
+        ds.data.forEach((valor, i) => {
+          totais[i] += valor;
+        });
       });
-    });
 
-    return totais;
-  }
+      return totais;
+    }
 
-  const totais = calcularTotaisPorPergunta(data.datasets);
-  const todosIguais = totais.every(t => t === totais[0]);
-  let subtitulo = "";
+    const totais = calcularTotaisPorPergunta(data.datasets);
+    const todosIguais = totais.every(t => t === totais[0]);
+    let subtitulo = "";
 
-  if (todosIguais) {
-    subtitulo = `Total de respostas: ${totais[0]}`;
-  } else {
-    subtitulo = `Inconsistência detectada: totais diferentes (${totais.join(", ")})`;
-  }
+    if (todosIguais) {
+      subtitulo = `Total de respostas: ${totais[0]}`;
+    } else {
+      subtitulo = `Inconsistência detectada: totais diferentes (${totais.join(", ")})`;
+    }
 
-  let showLabels = true;
+    let showLabels = true;
 
-  const config = {
-    type: "bar",
-    data: data,
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: "top" },
-        title: {
-          display: true,
-          text: "Distribuição das Respostas - Conectividade (Gertec MP35P)"
+    const config = {
+      type: "bar",
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { 
+            position: "top",
+            labels: {
+              font: {
+                size: 16,
+                weight: "bold"
+              }
+            }
+          },
+          title: {
+            display: true,
+            text: "Distribuição das Respostas - Conectividade (Gertec MP35P)",
+            font: {
+              size: 22,
+              weight: "bold"
+            }
+          },
+          subtitle: {
+            display: true,
+            text: subtitulo,
+            color: "#333",
+            font: { 
+              size: 18,
+              style: "italic"
+            }
+          },
+          datalabels: {
+            display: function() { return showLabels; },
+            color: "#000",
+            anchor: "center",
+            align: "center",
+            font: { 
+              weight: "bold",
+              size: 14
+            },
+            formatter: function(value) { return value; }
+          }
         },
-        subtitle: {
-          display: true,
-          text: subtitulo,
-          color: "#333",
-          font: { size: 14, style: "italic" }
-        },
-        datalabels: {
-          display: function() { return showLabels; },
-          color: "#000",
-          anchor: "center",
-          align: "center",
-          font: { weight: "bold" },
-          formatter: function(value) { return value; }
+        scales: { 
+          y: { 
+            beginAtZero: true, 
+            ticks: { 
+              stepSize: 1,
+              font: { size: 14 }
+            } 
+          },
+          x: {
+            ticks: {
+              font: { 
+                size: 18,   // <-- aumenta o tamanho da fonte dos rótulos do eixo X
+                weight: "bold"
+              }
+            }
+          }
         }
       },
-      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-    },
-    plugins: [ChartDataLabels]
-  };
+      plugins: [ChartDataLabels]
+    };
 
-  const conectividadeChart = new Chart(ctx, config);
+    const conectividadeChart = new Chart(ctx, config);
 
-  document.getElementById("toggleLabelsBtn").addEventListener("click", function() {
-    showLabels = !showLabels;
-    conectividadeChart.update();
-  });
+    document.getElementById("toggleLabelsBtn").addEventListener("click", function() {
+      showLabels = !showLabels;
+      conectividadeChart.update();
+    });
 
-  document.getElementById("downloadBtn").addEventListener("click", function() {
-    const link = document.createElement("a");
-    link.download = "Conectividade_MP35P.png";
-    link.href = conectividadeChart.toBase64Image("image/png", 1.0);
-    link.click();
-  });
-</script>
+    document.getElementById("downloadBtn").addEventListener("click", function() {
+      const link = document.createElement("a");
+      link.download = "Conectividade_MP35P.png";
+      link.href = conectividadeChart.toBase64Image("image/png", 1.0);
+      link.click();
+    });
+  </script>
+</body>
+</html>
+
 
 </body>
 </html>
