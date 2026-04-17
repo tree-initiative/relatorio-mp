@@ -2,124 +2,90 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Relatório Interativo - MP35P</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Relatório da Pesquisa Exploratória - Terminais de Pagamento</title>
   <style>
     body {
-      font-family: 'Roboto', Arial, sans-serif;
       margin: 0;
+      font-family: 'Roboto', Arial, sans-serif;
       display: flex;
-    }
-    nav {
-      width: 220px;
-      background-color: #A3C4F3;
-      padding: 20px;
       height: 100vh;
+      background-color: #f9f9f9;
+    }
+    /* Menu lateral */
+    nav {
+      width: 250px;
+      background: #A3C4F3;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
     }
     nav h2 {
       font-size: 18px;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
+      text-align: center;
     }
     nav a {
-      display: block;
-      margin: 10px 0;
       text-decoration: none;
-      color: #333;
+      color: #fff;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 4px;
       font-weight: bold;
+      transition: background 0.3s;
     }
+    nav a:hover {
+      background: #A8D5BA;
+      color: #333;
+    }
+    /* Área principal */
     main {
       flex: 1;
-      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: #CDB4DB;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
     }
     section {
-      margin-bottom: 50px;
+      padding: 20px;
+      background: #fff;
+      border-bottom: 2px solid #eee;
     }
-    canvas {
-      max-width: 800px;
-      margin-top: 20px;
-    }
-    button {
-      margin-top: 10px;
-      padding: 8px 16px;
-      background-color: #A8D5BA;
+    iframe {
+      flex: 1;
       border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button:hover {
-      background-color: #FFD6A5;
+      width: 100%;
     }
   </style>
 </head>
 <body>
   <nav>
-    <h2>Menu</h2>
-    <a href="#usabilidade">Usabilidade</a>
-    <a href="#conectividade">Conectividade</a>
-    <a href="#bateria">Bateria</a>
-    <a href="#comercial">Comercial</a>
-    <a href="#correlacoes">Correlação</a>
-    <a href="#clusters">Clusters</a>
-    <a href="#conclusoes">Conclusões</a>
+    <h2>Relatório</h2>
+    <a href="mp353p_scala_likert_conect.html" target="conteudo">MP35P - Conectividade</a>
+    <a href="mp353p_scala_likert_bateria.html" target="conteudo">MP35P - Bateria</a>
+    <a href="mp35p_scala_likert_usabilidade.html" target="conteudo">MP35P - Usabilidade</a>
+    <a href="s920_scala_likert_conect.html" target="conteudo">S920 - Conectividade</a>
+    <a href="s920_scala_likert_usabilidade.html" target="conteudo">S920 - Usabilidade</a>
   </nav>
 
   <main>
-    
-      
-    <section id="usabilidade">
-      <h2>Distribuição Likert - Usabilidade</h2>
-      <canvas id="chartUsabilidade"></canvas>
-      <button onclick="downloadChart(chartUsabilidade, 'usabilidade.png')">Baixar PNG 300 DPI</button>
-    
-      <div class="analise">
-        <h3>1. Explicação dos dados</h3>
-        <p>Este gráfico mostra a proporção de respostas na escala Likert (2 = Negativo, 3 = Neutro, 4 = Positivo) para a dimensão Usabilidade.</p>
-    
-        <h3>2. O que os dados revelam</h3>
-        <p>A maioria dos entrevistados avaliou a usabilidade como positiva, indicando que o terminal é fácil de operar e intuitivo.</p>
-    
-        <h3>3. Diagnóstico Técnico de Atributos</h3>
-        <p>Consolidando os resultados, o produto apresenta alta aceitação em usabilidade, com baixa incidência de críticas. Isso sugere que ergonomia e interface estão bem resolvidas.</p>
-      </div>
+    <header>Relatório da Pesquisa Exploratória sobre Terminais de Pagamento</header>
+    <section>
+      <p>
+        Este relatório apresenta os resultados da pesquisa exploratória realizada com comerciantes
+        sobre o desempenho, usabilidade e conectividade de terminais de pagamento. Os gráficos
+        foram elaborados com base em métricas estatísticas e métodos de análise robustos,
+        permitindo identificar padrões, pontos fortes e fragilidades técnicas dos dispositivos
+        avaliados.
+      </p>
     </section>
-
-    <!-- Outras seções vão aqui -->
+    <iframe name="conteudo" src="mp353p_scala_likert_conect.html"></iframe>
   </main>
-
-  <script>
-    // Exemplo de gráfico Usabilidade
-    const ctx = document.getElementById('chartUsabilidade').getContext('2d');
-    const chartUsabilidade = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ["Usabilidade"],
-        datasets: [
-          { label: "2 (Negativo)", data: [5], backgroundColor: "#FFD6A5" },
-          { label: "3 (Neutro)", data: [15], backgroundColor: "#CDB4DB" },
-          { label: "4 (Positivo)", data: [80], backgroundColor: "#A8D5BA" }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: "top" },
-          title: { display: true, text: "Distribuição Likert - Usabilidade" }
-        },
-        scales: {
-          x: { stacked: true },
-          y: { stacked: true, max: 100, ticks: { callback: v => v + "%" } }
-        }
-      }
-    });
-
-    // Função para download em PNG
-    function downloadChart(chart, filename) {
-      const link = document.createElement('a');
-      link.download = filename;
-      link.href = chart.toBase64Image("image/png", 1.0);
-      link.click();
-    }
-  </script>
 </body>
 </html>
