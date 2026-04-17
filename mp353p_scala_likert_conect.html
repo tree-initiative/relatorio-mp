@@ -62,83 +62,114 @@
   </div>
 
   <script>
-    const ctx = document.getElementById("conectividadeChart").getContext("2d");
+  const ctx = document.getElementById("conectividadeChart").getContext("2d");
 
-    const data = {
-      labels: [
-        "Estabilidade da conexão",
-        "Frequência de erros",
-        "Velocidade da conexão"
-      ],
-      datasets: [
-        {
-          label: "1 (Muito Negativo)",
-          data: [0, 0, 0, 0, 0],
-          backgroundColor: "#FF6B6B"
-        },
-        {
-          label: "2 (Negativo)",
-          data: [1, 4, 2, 0, 0],
-          backgroundColor: "#FFD6A5"
-        },
-        {
-          label: "3 (Neutro)",
-          data: [6, 7, 4, 0, 0],
-          backgroundColor: "#CDB4DB"
-        },
-        {
-          label: "4 (Positivo)",
-          data: [7, 6, 12, 0, 0],
-          backgroundColor: "#A8D5BA"
-        },
-        {
-          label: "5 (Muito Positivo)",
-          data: [13, 0, 9, 0, 0],
-          backgroundColor: "#A3C4F3"
-        }
-      ]
-    };
-
-    let showLabels = true;
-
-    const config = {
-      type: "bar",
-      data: data,
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: "top" },
-          title: {
-            display: true,
-            text: "Distribuição das Respostas - Conectividade (Gertec MP35P)"
-          },
-          datalabels: {
-            display: function() { return showLabels; },
-            color: "#000",
-            anchor: "center",
-            align: "center",
-            font: { weight: "bold" },
-            formatter: function(value) { return value; }
-          }
-        },
-        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+  const data = {
+    labels: [
+      "Estabilidade da conexão",
+      "Frequência de erros",
+      "Velocidade da conexão"
+    ],
+    datasets: [
+      {
+        label: "1 (Muito Negativo)",
+        data: [0, 0, 0],
+        backgroundColor: "#FF6B6B"
       },
-      plugins: [ChartDataLabels]
-    };
+      {
+        label: "2 (Negativo)",
+        data: [1, 4, 2],
+        backgroundColor: "#FFD6A5"
+      },
+      {
+        label: "3 (Neutro)",
+        data: [6, 7, 4],
+        backgroundColor: "#CDB4DB"
+      },
+      {
+        label: "4 (Positivo)",
+        data: [7, 7, 12],
+        backgroundColor: "#A8D5BA"
+      },
+      {
+        label: "5 (Muito Positivo)",
+        data: [15, 11, 11],
+        backgroundColor: "#A3C4F3"
+      }
+    ]
+  };
 
-    const conectividadeChart = new Chart(ctx, config);
+  // Função para calcular totais por pergunta
+  function calcularTotaisPorPergunta(datasets) {
+    const numPerguntas = datasets[0].data.length;
+    const totais = Array(numPerguntas).fill(0);
 
-    document.getElementById("toggleLabelsBtn").addEventListener("click", function() {
-      showLabels = !showLabels;
-      conectividadeChart.update();
+    datasets.forEach(ds => {
+      ds.data.forEach((valor, i) => {
+        totais[i] += valor;
+      });
     });
 
-    document.getElementById("downloadBtn").addEventListener("click", function() {
-      const link = document.createElement("a");
-      link.download = "Conectividade_MP35P.png";
-      link.href = conectividadeChart.toBase64Image("image/png", 1.0);
-      link.click();
-    });
-  </script>
+    return totais;
+  }
+
+  const totais = calcularTotaisPorPergunta(data.datasets);
+  const todosIguais = totais.every(t => t === totais[0]);
+  let subtitulo = "";
+
+  if (todosIguais) {
+    subtitulo = `Total de respostas: ${totais[0]}`;
+  } else {
+    subtitulo = `Inconsistência detectada: totais diferentes (${totais.join(", ")})`;
+  }
+
+  let showLabels = true;
+
+  const config = {
+    type: "bar",
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "top" },
+        title: {
+          display: true,
+          text: "Distribuição das Respostas - Conectividade (Gertec MP35P)"
+        },
+        subtitle: {
+          display: true,
+          text: subtitulo,
+          color: "#333",
+          font: { size: 14, style: "italic" }
+        },
+        datalabels: {
+          display: function() { return showLabels; },
+          color: "#000",
+          anchor: "center",
+          align: "center",
+          font: { weight: "bold" },
+          formatter: function(value) { return value; }
+        }
+      },
+      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+    },
+    plugins: [ChartDataLabels]
+  };
+
+  const conectividadeChart = new Chart(ctx, config);
+
+  document.getElementById("toggleLabelsBtn").addEventListener("click", function() {
+    showLabels = !showLabels;
+    conectividadeChart.update();
+  });
+
+  document.getElementById("downloadBtn").addEventListener("click", function() {
+    const link = document.createElement("a");
+    link.download = "Conectividade_MP35P.png";
+    link.href = conectividadeChart.toBase64Image("image/png", 1.0);
+    link.click();
+  });
+</script>
+
 </body>
 </html>
