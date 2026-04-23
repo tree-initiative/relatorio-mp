@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Nuvem de Palavras</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
+  <style>
+    body { text-align: center; font-family: Arial, sans-serif; }
+    #wordcloud { margin: auto; }
+    button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h2>Nuvem de Palavras</h2>
+  <div id="wordcloud"></div>
+  <button id="download">Baixar imagem (300 DPI)</button>
+
+  <script>
+    // Frequência dos termos (já consolidados)
+    const words = [
+      {text:"Bobina", size:5},
+      {text:"Capinha", size:3},
+      {text:"Capa", size:7},
+      {text:"Teclado extra", size:1},
+      {text:"Carregador extra", size:2},
+      {text:"Mais funcionalidades", size:1},
+      {text:"Película", size:10},
+      {text:"Alça de apoio", size:1},
+      {text:"Alça de suporte", size:1},
+      {text:"Adesivo maior", size:1},
+      {text:"Película e capa", size:1},
+      {text:"Bolsa", size:6},
+      {text:"Cordinha", size:3},
+      {text:"Suporte", size:10},
+      {text:"Bolsa e suporte", size:4},
+      {text:"Chip", size:1},
+      {text:"Carregador", size:1},
+      {text:"Alça", size:1},
+      {text:"Fonte do carregador", size:1},
+      {text:"Baner", size:1},
+      {text:"Carregador e bobina", size:1},
+      {text:"Adesivo e capa", size:1},
+      {text:"Melhorar suporte", size:1},
+      {text:"Capa e película", size:1},
+      {text:"Bolsinha", size:2}
+    ];
+
+    const width = 800, height = 600;
+
+    const layout = d3.layout.cloud()
+      .size([width, height])
+      .words(words.map(d => ({text: d.text, size: 10 + d.size * 8})))
+      .padding(5)
+      .rotate(() => ~~(Math.random() * 2) * 90)
+      .font("Impact")
+      .fontSize(d => d.size)
+      .on("end", draw);
+
+    layout.start();
+
+    function draw(words) {
+      d3.select("#wordcloud").append("svg")
+          .attr("width", width)
+          .attr("height", height)
+        .append("g")
+          .attr("transform", "translate(" + width/2 + "," + height/2 + ")")
+        .selectAll("text")
+          .data(words)
+        .enter().append("text")
+          .style("font-size", d => d.size + "px")
+          .style("font-family", "Impact")
+          .style("fill", () => d3.schemeCategory10[Math.floor(Math.random()*10)])
+          .attr("text-anchor", "middle")
+          .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
+          .text(d => d.text);
+    }
+
+    // Função para exportar em 300 DPI
+    document.getElementById("download").addEventListener("click", function() {
+      const svg = document.querySelector("svg");
+      const serializer = new XMLSerializer();
+      const svgStr = serializer.serializeToString(svg);
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width * 4;   // 300 DPI ~ 4x escala
+      canvas.height = height * 4;
+      const ctx = canvas.getContext("2d");
+
+      const img = new Image();
+      img.onload = function() {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const link = document.createElement("a");
+        link.download = "nuvem_palavras.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      };
+      img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgStr)));
+    });
+  </script>
+</body>
+</html>
